@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-
 interface LayoutProps {
   showSidebar?: boolean
   sidebarWidth?: 'narrow' | 'normal' | 'wide'
@@ -10,12 +8,6 @@ withDefaults(defineProps<LayoutProps>(), {
   showSidebar: false,
   sidebarWidth: 'normal'
 })
-
-const isSidebarOpen = ref(false)
-
-const toggleSidebar = () => {
-  isSidebarOpen.value = !isSidebarOpen.value
-}
 </script>
 
 <template>

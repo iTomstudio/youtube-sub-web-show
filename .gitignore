@@ -31,5 +31,9 @@ pnpm-debug.log*
 .cache/
 temp/
 
+# TypeScript
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
 
 *.json
