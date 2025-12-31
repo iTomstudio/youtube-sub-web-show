@@ -26,10 +26,9 @@ const toggleSidebar = () => {
     </main>
 
     <!-- 页脚 -->
-    <footer class="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 mt-12">
+    <!-- <footer class="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 mt-12">
       <div class="container-responsive max-w-7xl mx-auto py-8">
         <div class="grid grid-cols-1 tablet:grid-cols-3 gap-8">
-          <!-- 关于部分 -->
           <div>
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               关于我们
@@ -39,7 +38,6 @@ const toggleSidebar = () => {
             </p>
           </div>
 
-          <!-- 链接部分 -->
           <div>
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               快速链接
@@ -50,7 +48,7 @@ const toggleSidebar = () => {
                   to="/"
                   class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors text-sm"
                 >
-                  首页
+                  字幕工具
                 </router-link>
               </li>
               <li>
@@ -72,7 +70,6 @@ const toggleSidebar = () => {
             </ul>
           </div>
 
-          <!-- 信息部分 -->
           <div>
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
               联系方式
@@ -86,7 +83,7 @@ const toggleSidebar = () => {
           </div>
         </div>
       </div>
-    </footer>
+    </footer> -->
   </div>
 </template>
 

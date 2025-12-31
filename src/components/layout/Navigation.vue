@@ -9,7 +9,7 @@ const route = useRoute()
 const isMenuOpen = ref(false)
 
 const navLinks = [
-  { name: '首页', path: '/' },
+  { name: '字幕工具', path: '/' },
   { name: '关于', path: '/about' },
   { name: '仪表板', path: '/dashboard' },
 ]
@@ -29,7 +29,7 @@ const navigate = (path: string) => {
 <template>
   <nav class="bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50">
     <div class="container-responsive max-w-7xl mx-auto">
-      <div class="flex items-center justify-between h-16">
+      <div class="flex items-center h-16">
         <!-- Logo -->
         <div class="flex-shrink-0">
           <router-link to="/" class="text-2xl font-bold text-primary-600 dark:text-primary-dark-500">
@@ -37,8 +37,8 @@ const navigate = (path: string) => {
           </router-link>
         </div>
 
-        <!-- 桌面导航 -->
-        <div class="hidden tablet:flex items-center space-x-6">
+        <!-- 桌面导航 - 居中 -->
+        <div class="hidden tablet:flex items-center space-x-8 flex-1 justify-center">
           <router-link
             v-for="link in navLinks"
             :key="link.path"
@@ -52,11 +52,15 @@ const navigate = (path: string) => {
           >
             {{ link.name }}
           </router-link>
+        </div>
+
+        <!-- 桌面端右侧主题切换器 -->
+        <div class="hidden tablet:flex items-center">
           <ThemeToggle />
         </div>
 
         <!-- 移动端右侧控件 -->
-        <div class="tablet:hidden flex items-center space-x-2">
+        <div class="tablet:hidden flex items-center space-x-2 ml-auto">
           <ThemeToggle />
           <button
             class="p-2 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900"
