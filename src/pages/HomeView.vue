@@ -17,6 +17,10 @@ const translatedColumn = ref<HTMLElement | null>(null)
 let isScrolling = false
 let scrollTimer: number | null = null
 
+// 遮盖状态
+const hideFurigana = ref(false)
+const hideTranslation = ref(false)
+
 // 文件上传处理
 const handleFileUpload = (event: Event) => {
   const file = (event.target as HTMLInputElement).files?.[0]
@@ -102,7 +106,7 @@ const triggerFileUpload = () => {
 </script>
 
 <template>
-  <div class="space-y-6 pb-8">
+  <div class="space-y-3 pb-8">
     <!-- 文件上传区 -->
     <div v-if="!subtitles.length" class="flex items-center justify-center min-h-[60vh]">
       <div class="text-center p-12 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl max-w-md hover:border-primary-600 dark:hover:border-primary-dark-500 transition-colors">
@@ -134,20 +138,49 @@ const triggerFileUpload = () => {
     </div>
 
     <!-- 字幕展示区 -->
-    <div v-else class="space-y-4">
+    <div v-else class="space-y-2">
       <!-- 控制栏 -->
-      <div class="flex items-center justify-between p-4 bg-white dark:bg-gray-950 rounded-lg border border-gray-200 dark:border-gray-800">
-        <div>
-          <h2 class="text-lg font-bold text-gray-900 dark:text-white">
-            {{ subtitleData?.totalEntries || 0 }} 条字幕
-          </h2>
-          <p class="text-sm text-gray-500 dark:text-gray-400">
-            {{ subtitleData?.exportedAt ? new Date(subtitleData.exportedAt).toLocaleString('zh-CN') : '' }}
-          </p>
+      <div class="flex items-center justify-between px-3 py-2 bg-white dark:bg-gray-950 rounded-lg border border-gray-200 dark:border-gray-800">
+        <div class="flex items-center space-x-4">
+          <div>
+            <span class="text-sm font-bold text-gray-900 dark:text-white">
+              {{ subtitleData?.totalEntries || 0 }} 条字幕
+            </span>
+            <span class="text-xs text-gray-500 dark:text-gray-400 ml-2">
+              {{ subtitleData?.exportedAt ? new Date(subtitleData.exportedAt).toLocaleString('zh-CN') : '' }}
+            </span>
+          </div>
+
+          <!-- 遮盖功能按钮 -->
+          <div class="hidden desktop:flex items-center space-x-2">
+            <button
+              @click="hideFurigana = !hideFurigana"
+              :class="[
+                'px-3 py-1 text-xs font-medium rounded transition-colors',
+                hideFurigana
+                  ? 'bg-primary-600 text-white dark:bg-primary-dark-500'
+                  : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+              ]"
+            >
+              {{ hideFurigana ? '显示假名' : '隐藏假名' }}
+            </button>
+            <button
+              @click="hideTranslation = !hideTranslation"
+              :class="[
+                'px-3 py-1 text-xs font-medium rounded transition-colors',
+                hideTranslation
+                  ? 'bg-primary-600 text-white dark:bg-primary-dark-500'
+                  : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+              ]"
+            >
+              {{ hideTranslation ? '显示翻译' : '隐藏翻译' }}
+            </button>
+          </div>
         </div>
+
         <button
           @click="clearSubtitles"
-          class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors"
+          class="px-3 py-1 text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
         >
           清除字幕
         </button>
@@ -156,11 +189,18 @@ const triggerFileUpload = () => {
       <!-- 桌面端：三栏布局 -->
       <div class="hidden desktop:grid desktop:grid-cols-3 gap-4 relative">
         <!-- 左栏：带假名注音 -->
-        <div class="bg-white dark:bg-gray-950 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div class="bg-white dark:bg-gray-950 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden relative">
+          <!-- 遮盖层 -->
+          <div
+            v-if="hideFurigana"
+            class="absolute inset-0 bg-gray-900/90 dark:bg-gray-950/90 backdrop-blur-sm z-20 flex items-center justify-center"
+          >
+            <p class="text-white text-sm font-medium">假名已隐藏</p>
+          </div>
           <div
             ref="furiganaColumn"
             @scroll="handleScroll('furigana')"
-            class="subtitle-column h-[calc(100vh-16rem)] overflow-y-auto"
+            class="subtitle-column h-[calc(100vh-12rem)] overflow-y-auto"
           >
             <div class="sticky top-0 bg-primary-100 dark:bg-primary-dark-100 px-4 py-3 border-b border-gray-200 dark:border-gray-800 z-10">
               <h3 class="text-sm font-bold text-primary-800 dark:text-primary-dark-800">假名注音</h3>
@@ -181,7 +221,7 @@ const triggerFileUpload = () => {
           <div
             ref="textColumn"
             @scroll="handleScroll('text')"
-            class="subtitle-column h-[calc(100vh-16rem)] overflow-y-auto"
+            class="subtitle-column h-[calc(100vh-12rem)] overflow-y-auto"
           >
             <div class="sticky top-0 bg-primary-100 dark:bg-primary-dark-100 px-4 py-3 border-b border-gray-200 dark:border-gray-800 z-10">
               <h3 class="text-sm font-bold text-primary-800 dark:text-primary-dark-800">日语原文</h3>
@@ -198,11 +238,18 @@ const triggerFileUpload = () => {
         </div>
 
         <!-- 右栏：中文翻译 -->
-        <div class="bg-white dark:bg-gray-950 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div class="bg-white dark:bg-gray-950 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden relative">
+          <!-- 遮盖层 -->
+          <div
+            v-if="hideTranslation"
+            class="absolute inset-0 bg-gray-900/90 dark:bg-gray-950/90 backdrop-blur-sm z-20 flex items-center justify-center"
+          >
+            <p class="text-white text-sm font-medium">翻译已隐藏</p>
+          </div>
           <div
             ref="translatedColumn"
             @scroll="handleScroll('translated')"
-            class="subtitle-column h-[calc(100vh-16rem)] overflow-y-auto"
+            class="subtitle-column h-[calc(100vh-12rem)] overflow-y-auto"
           >
             <div class="sticky top-0 bg-primary-100 dark:bg-primary-dark-100 px-4 py-3 border-b border-gray-200 dark:border-gray-800 z-10">
               <h3 class="text-sm font-bold text-primary-800 dark:text-primary-dark-800">中文翻译</h3>

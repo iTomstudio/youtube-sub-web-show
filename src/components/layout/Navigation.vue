@@ -44,7 +44,7 @@ const navigate = (path: string) => {
             :key="link.path"
             :to="link.path"
             :class="[
-              'text-sm font-medium transition-colors',
+              'text-sm font-bold transition-colors',
               isActive(link.path)
                 ? 'text-primary-600 dark:text-primary-dark-500'
                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'

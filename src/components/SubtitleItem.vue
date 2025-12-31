@@ -28,9 +28,8 @@ const displayText = computed(() => {
 })
 
 const formattedTime = computed(() => {
-  const start = props.subtitle.startTime.substring(0, 5).replace(/^00:/, '')
-  const end = props.subtitle.endTime.substring(0, 5).replace(/^00:/, '')
-  return `${start} → ${end}`
+  // 完整时间格式：00:00:06,020 → 00:00:11,440
+  return `${props.subtitle.startTime} → ${props.subtitle.endTime}`
 })
 </script>
 
