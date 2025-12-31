@@ -10,6 +10,7 @@ const isMenuOpen = ref(false)
 
 const navLinks = [
   { name: '字幕工具', path: '/' },
+  { name: '编辑器', path: '/editor' },
   { name: '关于', path: '/about' },
   { name: '仪表板', path: '/dashboard' },
 ]

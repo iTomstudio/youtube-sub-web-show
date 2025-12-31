@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { analyticsService } from '@/services/analytics'
 import HomeView from '@/pages/HomeView.vue'
+import SubtitleEditorView from '@/pages/SubtitleEditorView.vue'
 import AboutView from '@/pages/AboutView.vue'
 import DashboardView from '@/pages/DashboardView.vue'
 import NotFoundView from '@/pages/NotFoundView.vue'
@@ -12,6 +13,14 @@ const routes: RouteRecordRaw[] = [
     component: HomeView,
     meta: {
       title: '橘子外语学习'
+    }
+  },
+  {
+    path: '/editor',
+    name: 'editor',
+    component: SubtitleEditorView,
+    meta: {
+      title: '字幕编辑器 - YouTube Sub Web Show'
     }
   },
   {
