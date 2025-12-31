@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import type { Subtitle, SubtitleData } from '@/types/subtitle'
 import SubtitleItem from '@/components/SubtitleItem.vue'
 import { Upload } from 'lucide-vue-next'
@@ -21,6 +21,46 @@ let scrollTimer: number | null = null
 const hideFurigana = ref(false)
 const hideTranslation = ref(false)
 
+// sessionStorage 键名（切换路由会保留）
+const STORAGE_KEY = 'subtitle-data'
+const NAVIGATION_FLAG_KEY = 'subtitle-navigation-flag'
+
+// 从 sessionStorage 加载字幕数据
+const loadFromStorage = () => {
+  try {
+    // 检查是否是从导航返回的（而不是刷新）
+    const isNavigation = sessionStorage.getItem(NAVIGATION_FLAG_KEY) === 'true'
+
+    if (isNavigation) {
+      const saved = sessionStorage.getItem(STORAGE_KEY)
+      if (saved) {
+        const data = JSON.parse(saved) as SubtitleData
+        subtitleData.value = data
+        subtitles.value = data.subtitles
+        console.log('从缓存加载了', data.totalEntries, '条字幕')
+      }
+    } else {
+      // 如果不是导航返回（即刷新或首次访问），清除数据
+      console.log('检测到刷新或首次访问，清除缓存数据')
+      sessionStorage.removeItem(STORAGE_KEY)
+    }
+
+    // 重置导航标记
+    sessionStorage.removeItem(NAVIGATION_FLAG_KEY)
+  } catch (error) {
+    console.error('加载缓存失败:', error)
+  }
+}
+
+// 保存到 sessionStorage
+const saveToStorage = (data: SubtitleData) => {
+  try {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+  } catch (error) {
+    console.error('保存缓存失败:', error)
+  }
+}
+
 // 文件上传处理
 const handleFileUpload = (event: Event) => {
   const file = (event.target as HTMLInputElement).files?.[0]
@@ -33,6 +73,9 @@ const handleFileUpload = (event: Event) => {
       subtitleData.value = data
       subtitles.value = data.subtitles
       activeIndex.value = null
+
+      // 保存到 sessionStorage
+      saveToStorage(data)
     } catch (error) {
       alert('JSON 文件格式错误，请检查文件内容')
       console.error('解析JSON失败:', error)
@@ -50,6 +93,9 @@ const clearSubtitles = () => {
     if (fileInput.value) {
       fileInput.value.value = ''
     }
+
+    // 同时清除 sessionStorage
+    sessionStorage.removeItem(STORAGE_KEY)
   }
 }
 
@@ -103,6 +149,11 @@ const setActive = (index: number) => {
 const triggerFileUpload = () => {
   fileInput.value?.click()
 }
+
+// 组件挂载时从 sessionStorage 加载数据
+onMounted(() => {
+  loadFromStorage()
+})
 </script>
 
 <template>

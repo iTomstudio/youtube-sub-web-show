@@ -20,7 +20,13 @@ const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value
 }
 
+// 设置导航标记（用于区分路由导航和页面刷新）
+const setNavigationFlag = () => {
+  sessionStorage.setItem('subtitle-navigation-flag', 'true')
+}
+
 const navigate = (path: string) => {
+  setNavigationFlag()
   router.push(path)
   isMenuOpen.value = false
 }
@@ -43,6 +49,7 @@ const navigate = (path: string) => {
             v-for="link in navLinks"
             :key="link.path"
             :to="link.path"
+            @click="setNavigationFlag"
             :class="[
               'text-sm font-bold transition-colors',
               isActive(link.path)
