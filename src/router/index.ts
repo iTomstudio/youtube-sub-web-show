@@ -10,7 +10,7 @@ const routes: RouteRecordRaw[] = [
     name: 'home',
     component: HomeView,
     meta: {
-      title: '首页 - YouTube Sub Web Show'
+      title: '橘子外语学习'
     }
   },
   {

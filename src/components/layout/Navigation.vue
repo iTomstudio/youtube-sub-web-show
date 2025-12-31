@@ -32,7 +32,7 @@ const navigate = (path: string) => {
         <!-- Logo -->
         <div class="flex-shrink-0">
           <router-link to="/" class="text-2xl font-bold text-blue-600 dark:text-blue-400">
-            YSW
+            橘子外语学习
           </router-link>
         </div>
 
