@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { Menu, X } from 'lucide-vue-next'
+import ThemeToggle from '@/components/ui/ThemeToggle.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -31,13 +32,13 @@ const navigate = (path: string) => {
       <div class="flex items-center justify-between h-16">
         <!-- Logo -->
         <div class="flex-shrink-0">
-          <router-link to="/" class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+          <router-link to="/" class="text-2xl font-bold text-primary-600 dark:text-primary-dark-500">
             橘子外语学习
           </router-link>
         </div>
 
         <!-- 桌面导航 -->
-        <div class="hidden tablet:flex items-center space-x-8">
+        <div class="hidden tablet:flex items-center space-x-6">
           <router-link
             v-for="link in navLinks"
             :key="link.path"
@@ -45,22 +46,26 @@ const navigate = (path: string) => {
             :class="[
               'text-sm font-medium transition-colors',
               isActive(link.path)
-                ? 'text-blue-600 dark:text-blue-400'
+                ? 'text-primary-600 dark:text-primary-dark-500'
                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
             ]"
           >
             {{ link.name }}
           </router-link>
+          <ThemeToggle />
         </div>
 
-        <!-- 移动端菜单按钮 -->
-        <button
-          class="tablet:hidden p-2 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900"
-          @click="toggleMenu"
-        >
-          <Menu v-if="!isMenuOpen" :size="24" />
-          <X v-else :size="24" />
-        </button>
+        <!-- 移动端右侧控件 -->
+        <div class="tablet:hidden flex items-center space-x-2">
+          <ThemeToggle />
+          <button
+            class="p-2 rounded-md text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900"
+            @click="toggleMenu"
+          >
+            <Menu v-if="!isMenuOpen" :size="24" />
+            <X v-else :size="24" />
+          </button>
+        </div>
       </div>
 
       <!-- 移动端导航 -->
@@ -75,7 +80,7 @@ const navigate = (path: string) => {
           :class="[
             'block w-full text-left px-4 py-2 text-sm font-medium rounded-md transition-colors',
             isActive(link.path)
-              ? 'bg-blue-50 dark:bg-gray-900 text-blue-600 dark:text-blue-400'
+              ? 'bg-primary-50 dark:bg-gray-900 text-primary-600 dark:text-primary-dark-500'
               : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900'
           ]"
         >

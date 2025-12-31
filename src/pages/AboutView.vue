@@ -37,7 +37,7 @@
       </h2>
       <ul class="space-y-4">
         <li class="flex items-start space-x-3">
-          <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm">
+          <div class="flex-shrink-0 w-6 h-6 rounded-full bg-primary-600 dark:bg-primary-dark-500 flex items-center justify-center text-white font-bold text-sm">
             ✓
           </div>
           <div>
@@ -46,7 +46,7 @@
           </div>
         </li>
         <li class="flex items-start space-x-3">
-          <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm">
+          <div class="flex-shrink-0 w-6 h-6 rounded-full bg-primary-600 dark:bg-primary-dark-500 flex items-center justify-center text-white font-bold text-sm">
             ✓
           </div>
           <div>
@@ -55,7 +55,7 @@
           </div>
         </li>
         <li class="flex items-start space-x-3">
-          <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm">
+          <div class="flex-shrink-0 w-6 h-6 rounded-full bg-primary-600 dark:bg-primary-dark-500 flex items-center justify-center text-white font-bold text-sm">
             ✓
           </div>
           <div>

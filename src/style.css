@@ -22,10 +22,21 @@
 
 @layer components {
   .btn-primary {
-    @apply px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors;
+    @apply px-4 py-2 bg-primary-600 text-white rounded-lg
+           hover:bg-primary-700 active:bg-primary-800
+           dark:bg-primary-dark-500 dark:hover:bg-primary-dark-600
+           dark:active:bg-primary-dark-700
+           transition-colors;
   }
 
   .container-responsive {
     @apply px-4 tablet:px-6 desktop:px-8;
+  }
+
+  .theme-toggle-btn {
+    @apply p-2 rounded-lg transition-colors
+           text-gray-600 dark:text-gray-400
+           hover:bg-gray-100 dark:hover:bg-gray-800
+           focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-dark-500;
   }
 }

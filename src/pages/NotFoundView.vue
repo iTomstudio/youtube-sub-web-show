@@ -16,7 +16,7 @@
     </div>
     <router-link
       to="/"
-      class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+      class="inline-block px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 dark:bg-primary-dark-500 dark:hover:bg-primary-dark-600 transition-colors font-medium"
     >
       返回首页
     </router-link>

@@ -6,6 +6,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="使用AI将YouTube日语字幕翻译成中文" />
     <title>橘子外语学习</title>
+    <script>
+      (function() {
+        const theme = localStorage.getItem('orange-language-theme') || 'system';
+        const isDark = theme === 'dark' ||
+          (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (isDark) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="app"></div>
