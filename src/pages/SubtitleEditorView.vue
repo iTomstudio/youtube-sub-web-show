@@ -1,7 +1,12 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onActivated } from 'vue'
 import { ExternalLink, AlertCircle, Loader2 } from 'lucide-vue-next'
 import { useAnalytics } from '@/composables/useAnalytics'
+
+// 定义组件名称，用于 keep-alive
+defineOptions({
+  name: 'SubtitleEditorView'
+})
 
 const { trackEvent, trackException } = useAnalytics()
 
@@ -9,10 +14,12 @@ const { trackEvent, trackException } = useAnalytics()
 const isLoading = ref(true)
 const loadError = ref(false)
 const iframeRef = ref<HTMLIFrameElement | null>(null)
+const hasLoadedOnce = ref(false)
 
 // iframe 加载完成处理
 const handleIframeLoad = () => {
   isLoading.value = false
+  hasLoadedOnce.value = true
   trackEvent('subtitle_editor_loaded', {
     event_category: 'editor',
     event_label: 'iframe_load_success'
@@ -26,7 +33,7 @@ const handleIframeError = () => {
   trackException('Subtitle editor iframe failed to load', false)
 }
 
-// 在新标签页打开编辑器（备选方案）
+// 在新标签页打开精听工具（备选方案）
 const openInNewTab = () => {
   window.open('https://www.nikse.dk/subtitleedit/online', '_blank', 'noopener,noreferrer')
   trackEvent('subtitle_editor_external_open', {
@@ -50,10 +57,20 @@ onMounted(() => {
     event_label: 'editor_page_mounted'
   })
 })
+
+// keep-alive 组件被激活时触发（从其他页面返回）
+onActivated(() => {
+  console.log('Editor activated, hasLoadedOnce:', hasLoadedOnce.value, 'isLoading:', isLoading.value)
+  // 如果已经加载过，立即隐藏加载状态
+  if (hasLoadedOnce.value) {
+    isLoading.value = false
+    console.log('Setting isLoading to false because already loaded')
+  }
+})
 </script>
 
 <template>
-  <!-- 编辑器容器 - 全屏显示 -->
+  <!-- 精听工具容器 - 全屏显示 -->
   <div class="relative bg-white dark:bg-gray-950 overflow-hidden h-[calc(100vh-4rem)]">
     <!-- 顶部工具栏 -->
     <div class="absolute top-0 right-0 z-20 p-3">
@@ -76,7 +93,7 @@ onMounted(() => {
     >
       <div class="text-center">
         <Loader2 :size="48" class="mx-auto text-primary-600 dark:text-primary-dark-500 animate-spin mb-4" />
-        <p class="text-gray-600 dark:text-gray-400">正在加载字幕编辑器...</p>
+        <p class="text-gray-600 dark:text-gray-400">正在加载精听工具...</p>
       </div>
     </div>
 
@@ -88,10 +105,10 @@ onMounted(() => {
       <div class="text-center max-w-md p-8">
         <AlertCircle :size="48" class="mx-auto text-red-500 mb-4" />
         <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
-          无法加载编辑器
+          无法加载精听工具
         </h3>
         <p class="text-gray-600 dark:text-gray-400 mb-6">
-          编辑器可能因为浏览器安全策略无法在此处显示。您可以尝试重新加载或在新标签页中打开。
+          精听工具可能因为浏览器安全策略无法在此处显示。您可以尝试重新加载或在新标签页中打开。
         </p>
         <div class="flex justify-center space-x-3">
           <button
@@ -114,7 +131,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- iframe 编辑器 - 全屏 -->
+    <!-- iframe 精听工具 - 全屏 -->
     <iframe
       ref="iframeRef"
       src="https://www.nikse.dk/subtitleedit/online"

@@ -16,11 +16,13 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
-    path: '/editor',
-    name: 'editor',
+    path: '/nikse',
+    name: 'nikse',
     component: SubtitleEditorView,
     meta: {
-      title: '字幕编辑器 - YouTube Sub Web Show'
+      title: '精听工具 - YouTube Sub Web Show',
+      fullScreen: true,
+      keepAlive: true
     }
   },
   {
