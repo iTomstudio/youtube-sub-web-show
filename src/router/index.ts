@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import { analyticsService } from '@/services/analytics'
 import HomeView from '@/pages/HomeView.vue'
 import AboutView from '@/pages/AboutView.vue'
 import DashboardView from '@/pages/DashboardView.vue'
@@ -52,7 +53,15 @@ const router = createRouter({
 })
 
 router.beforeEach((to, _from, next) => {
-  document.title = (to.meta.title as string) || 'YouTube Sub Web Show'
+  // 更新文档标题
+  const title = (to.meta.title as string) || 'YouTube Sub Web Show'
+  document.title = title
+
+  // 追踪页面浏览
+  if (analyticsService.isReady()) {
+    analyticsService.trackPageView(to.path, title)
+  }
+
   next()
 })
 

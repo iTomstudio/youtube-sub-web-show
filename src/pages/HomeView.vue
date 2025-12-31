@@ -3,6 +3,15 @@ import { ref, onMounted } from 'vue'
 import type { Subtitle, SubtitleData } from '@/types/subtitle'
 import SubtitleItem from '@/components/SubtitleItem.vue'
 import { Upload } from 'lucide-vue-next'
+import { useAnalytics } from '@/composables/useAnalytics'
+
+const {
+  trackSubtitleUpload,
+  trackSubtitleClear,
+  trackColumnToggle,
+  trackMobileViewSwitch,
+  trackException,
+} = useAnalytics()
 
 const subtitles = ref<Subtitle[]>([])
 const subtitleData = ref<SubtitleData | null>(null)
@@ -80,9 +89,14 @@ const handleFileUpload = (event: Event) => {
 
       // 保存到 sessionStorage
       saveToStorage(data)
+
+      // 追踪上传事件
+      trackSubtitleUpload(file.name, data.subtitles.length)
     } catch (error) {
       alert('JSON 文件格式错误，请检查文件内容')
       console.error('解析JSON失败:', error)
+      // 追踪异常
+      trackException('Failed to parse subtitle file', false)
     }
   }
   reader.readAsText(file)
@@ -100,6 +114,9 @@ const clearSubtitles = () => {
 
     // 同时清除 sessionStorage
     sessionStorage.removeItem(STORAGE_KEY)
+
+    // 追踪清除事件
+    trackSubtitleClear()
   }
 }
 
@@ -256,7 +273,7 @@ onMounted(() => {
           <!-- 遮盖功能按钮 -->
           <div class="hidden desktop:flex items-center space-x-2">
             <button
-              @click="hideFurigana = !hideFurigana"
+              @click="() => { hideFurigana = !hideFurigana; trackColumnToggle('furigana', !hideFurigana) }"
               :class="[
                 'px-3 py-1 text-xs font-medium rounded transition-colors',
                 hideFurigana
@@ -267,7 +284,7 @@ onMounted(() => {
               {{ hideFurigana ? '显示假名' : '隐藏假名' }}
             </button>
             <button
-              @click="hideTranslation = !hideTranslation"
+              @click="() => { hideTranslation = !hideTranslation; trackColumnToggle('translation', !hideTranslation) }"
               :class="[
                 'px-3 py-1 text-xs font-medium rounded transition-colors',
                 hideTranslation
@@ -373,7 +390,7 @@ onMounted(() => {
         <!-- 切换按钮 -->
         <div class="flex justify-center space-x-2">
           <button
-            @click="mobileView = 'furigana'"
+            @click="() => { mobileView = 'furigana'; trackMobileViewSwitch('furigana') }"
             :class="[
               'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
               mobileView === 'furigana'
@@ -384,7 +401,7 @@ onMounted(() => {
             假名注音
           </button>
           <button
-            @click="mobileView = 'text'"
+            @click="() => { mobileView = 'text'; trackMobileViewSwitch('text') }"
             :class="[
               'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
               mobileView === 'text'
@@ -395,7 +412,7 @@ onMounted(() => {
             纯日语
           </button>
           <button
-            @click="mobileView = 'translated'"
+            @click="() => { mobileView = 'translated'; trackMobileViewSwitch('translated') }"
             :class="[
               'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
               mobileView === 'translated'
