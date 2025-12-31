@@ -9,6 +9,7 @@ const subtitleData = ref<SubtitleData | null>(null)
 const activeIndex = ref<number | null>(null)
 const fileInput = ref<HTMLInputElement | null>(null)
 const mobileView = ref<'furigana' | 'text' | 'translated'>('furigana')
+const fileName = ref<string>('')
 
 const furiganaColumn = ref<HTMLElement | null>(null)
 const textColumn = ref<HTMLElement | null>(null)
@@ -65,6 +66,9 @@ const saveToStorage = (data: SubtitleData) => {
 const handleFileUpload = (event: Event) => {
   const file = (event.target as HTMLInputElement).files?.[0]
   if (!file) return
+
+  // 保存文件名
+  fileName.value = file.name
 
   const reader = new FileReader()
   reader.onload = (e) => {
@@ -158,33 +162,80 @@ onMounted(() => {
 
 <template>
   <div class="space-y-3 pb-8">
-    <!-- 文件上传区 -->
-    <div v-if="!subtitles.length" class="flex items-center justify-center min-h-[60vh]">
-      <div class="text-center p-12 border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl max-w-md hover:border-primary-600 dark:hover:border-primary-dark-500 transition-colors">
-        <input
-          type="file"
-          ref="fileInput"
-          accept=".json,application/json"
-          @change="handleFileUpload"
-          class="hidden"
-        />
-        <div class="mb-6">
-          <Upload :size="48" class="mx-auto text-gray-400 dark:text-gray-600" />
+    <!-- 空状态：上传区叠加在三列预览上 -->
+    <div v-if="!subtitles.length" class="relative min-h-[70vh]">
+      <!-- 背景：三列预览（模糊半透明） -->
+      <div class="absolute inset-0 pointer-events-none opacity-50 blur-xs">
+        <div class="hidden desktop:grid desktop:grid-cols-3 gap-4">
+          <!-- 左栏：假名注音预览 -->
+          <div class="bg-white dark:bg-gray-950 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+            <div class="bg-primary-100 dark:bg-primary-dark-100 px-4 py-3 border-b border-gray-200 dark:border-gray-800">
+              <h3 class="text-sm font-bold text-primary-800 dark:text-primary-dark-800">假名注音</h3>
+            </div>
+            <div class="p-4 space-y-3">
+              <div v-for="i in 3" :key="`demo-furigana-${i}`" class="h-[120px] border-b border-gray-200 dark:border-gray-800 p-4">
+                <div class="text-xs text-gray-400 mb-2">#{{ i }} · 00:00:00,000</div>
+                <div class="text-base text-gray-600 dark:text-gray-400">よし、終わり！</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 中栏：日语原文预览 -->
+          <div class="bg-white dark:bg-gray-950 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+            <div class="bg-primary-100 dark:bg-primary-dark-100 px-4 py-3 border-b border-gray-200 dark:border-gray-800">
+              <h3 class="text-sm font-bold text-primary-800 dark:text-primary-dark-800">日语原文</h3>
+            </div>
+            <div class="p-4 space-y-3">
+              <div v-for="i in 3" :key="`demo-text-${i}`" class="h-[120px] border-b border-gray-200 dark:border-gray-800 p-4">
+                <div class="text-xs text-gray-400 mb-2">#{{ i }} · 00:00:00,000</div>
+                <div class="text-base text-gray-600 dark:text-gray-400">よし、終わり！</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 右栏：中文翻译预览 -->
+          <div class="bg-white dark:bg-gray-950 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
+            <div class="bg-primary-100 dark:bg-primary-dark-100 px-4 py-3 border-b border-gray-200 dark:border-gray-800">
+              <h3 class="text-sm font-bold text-primary-800 dark:text-primary-dark-800">中文翻译</h3>
+            </div>
+            <div class="p-4 space-y-3">
+              <div v-for="i in 3" :key="`demo-trans-${i}`" class="h-[120px] border-b border-gray-200 dark:border-gray-800 p-4">
+                <div class="text-xs text-gray-400 mb-2">#{{ i }} · 00:00:00,000</div>
+                <div class="text-base text-gray-600 dark:text-gray-400">好了，结束了！</div>
+              </div>
+            </div>
+          </div>
         </div>
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-          上传字幕文件
-        </h2>
-        <p class="text-gray-600 dark:text-gray-400 mb-6">
-          支持 JSON 格式的字幕文件<br />
-          包含日语原文、假名注音和中文翻译
-        </p>
-        <button
-          @click="triggerFileUpload"
-          class="btn-primary inline-flex items-center space-x-2"
-        >
-          <Upload :size="20" />
-          <span>选择文件</span>
-        </button>
+      </div>
+
+      <!-- 前景：上传区域（清晰、可交互） -->
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="text-center p-12 bg-white/95 dark:bg-gray-950/95 backdrop-blur-md border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-xl max-w-md hover:border-primary-600 dark:hover:border-primary-dark-500 transition-colors shadow-2xl">
+          <input
+            type="file"
+            ref="fileInput"
+            accept=".json,application/json"
+            @change="handleFileUpload"
+            class="hidden"
+          />
+          <div class="mb-6">
+            <Upload :size="48" class="mx-auto text-gray-400 dark:text-gray-600" />
+          </div>
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+            上传字幕文件
+          </h2>
+          <p class="text-gray-600 dark:text-gray-400 mb-6">
+            支持 JSON 格式的字幕文件<br />
+            包含日语原文、假名注音和中文翻译
+          </p>
+          <button
+            @click="triggerFileUpload"
+            class="btn-primary inline-flex items-center space-x-2"
+          >
+            <Upload :size="20" />
+            <span>选择文件</span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -405,5 +456,20 @@ onMounted(() => {
 
 .subtitle-column::-webkit-scrollbar-thumb:hover {
   @apply bg-gray-400 dark:bg-gray-500;
+}
+
+/* 背景预览模糊效果 */
+.blur-xs {
+  filter: blur(2px);
+}
+
+/* 前景上传区域阴影 */
+.shadow-2xl {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* 玻璃态效果 */
+.backdrop-blur-md {
+  backdrop-filter: blur(12px);
 }
 </style>
