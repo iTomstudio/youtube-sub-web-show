@@ -4,6 +4,8 @@ import HomeView from '@/pages/HomeView.vue'
 import SubtitleEditorView from '@/pages/SubtitleEditorView.vue'
 import AboutView from '@/pages/AboutView.vue'
 import DashboardView from '@/pages/DashboardView.vue'
+import FreeExamplesView from '@/pages/FreeExamplesView.vue'
+import CustomServicesView from '@/pages/CustomServicesView.vue'
 import NotFoundView from '@/pages/NotFoundView.vue'
 
 const routes: RouteRecordRaw[] = [
@@ -31,6 +33,22 @@ const routes: RouteRecordRaw[] = [
     component: AboutView,
     meta: {
       title: '关于 - YouTube Sub Web Show'
+    }
+  },
+  {
+    path: '/examples',
+    name: 'examples',
+    component: FreeExamplesView,
+    meta: {
+      title: '免费示例 - 橘子外语学习'
+    }
+  },
+  {
+    path: '/services',
+    name: 'services',
+    component: CustomServicesView,
+    meta: {
+      title: '定制服务 - 橘子外语学习'
     }
   },
   {

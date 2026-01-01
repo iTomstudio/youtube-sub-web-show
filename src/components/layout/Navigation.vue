@@ -11,8 +11,10 @@ const isMenuOpen = ref(false)
 const navLinks = [
   { name: '字幕工具', path: '/' },
   { name: '精听工具', path: '/nikse' },
-  { name: '关于', path: '/about' },
-  { name: '仪表板', path: '/dashboard' },
+  { name: '免费示例', path: '/examples' },
+  { name: '定制服务', path: '/services' },
+  // { name: '关于', path: '/about' },
+  // { name: '仪表板', path: '/dashboard' },
 ]
 
 const isActive = (path: string) => route.path === path
