@@ -124,21 +124,18 @@ export function useElementScrollPosition(elementRef: { value: HTMLElement | null
         return
       }
       scrollTimer = window.setTimeout(() => {
-        console.log(`[${elementId}] 滚动事件触发，保存位置`)
         saveScrollPosition()
         scrollTimer = null
       }, 100) // 100ms 节流
     }
     elementRef.value.addEventListener('scroll', scrollHandler, { passive: true })
     isListenerAttached = true
-    console.log(`[${elementId}] 已添加滚动监听器`)
   }
 
   // 监听 elementRef 的变化，当元素出现时添加监听器
   watch(
     () => elementRef.value,
     (newValue) => {
-      console.log(`[${elementId}] elementRef 变化:`, !!newValue)
       if (newValue && !isListenerAttached) {
         attachScrollListener()
       }
@@ -147,7 +144,6 @@ export function useElementScrollPosition(elementRef: { value: HTMLElement | null
   )
 
   onMounted(() => {
-    console.log(`[${elementId}] onMounted, elementRef.value:`, !!elementRef.value)
     attachScrollListener()
   })
 

@@ -46,6 +46,7 @@ const formattedTime = computed(() => {
         : ''
     ]"
     :data-active="active"
+    :data-subtitle-index="subtitle.index"
     @click="emit('click')"
   >
     <!-- 序号和时间戳 -->

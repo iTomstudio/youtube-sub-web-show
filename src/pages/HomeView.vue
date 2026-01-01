@@ -20,6 +20,7 @@ const activeIndex = ref<number | null>(null)
 const fileInput = ref<HTMLInputElement | null>(null)
 const mobileView = ref<'furigana' | 'text' | 'translated'>('furigana')
 const fileName = ref<string>('')
+const jumpToIndex = ref<string>('')
 
 const furiganaColumn = ref<HTMLElement | null>(null)
 const textColumn = ref<HTMLElement | null>(null)
@@ -34,27 +35,14 @@ useElementScrollPosition(furiganaColumn)
 
 // 在组件激活时，手动恢复所有三个列的滚动位置
 onActivated(() => {
-  console.log('HomeView 被激活，准备恢复滚动位置')
   // 延迟一下确保 DOM 已渲染
   setTimeout(() => {
     if (furiganaColumn.value && textColumn.value && translatedColumn.value) {
       const scrollTop = furiganaColumn.value.scrollTop
-      console.log('恢复字幕列滚动位置:', scrollTop)
       textColumn.value.scrollTop = scrollTop
       translatedColumn.value.scrollTop = scrollTop
-    } else {
-      console.warn('字幕列元素不存在:', {
-        furigana: !!furiganaColumn.value,
-        text: !!textColumn.value,
-        translated: !!translatedColumn.value
-      })
     }
   }, 50)
-})
-
-// 组件挂载时的调试
-onMounted(() => {
-  console.log('HomeView 已挂载')
 })
 
 let isScrolling = false
@@ -204,6 +192,36 @@ const triggerFileUpload = () => {
   fileInput.value?.click()
 }
 
+// 跳转到指定字幕
+const handleJumpToSubtitle = () => {
+  const index = parseInt(jumpToIndex.value)
+  if (isNaN(index) || index < 1 || index > subtitles.value.length) {
+    alert(`请输入 1 到 ${subtitles.value.length} 之间的数字`)
+    return
+  }
+
+  // 设置为激活状态（高亮显示）
+  setActive(index)
+
+  // 找到对应的字幕元素
+  const targetElement = document.querySelector(`[data-subtitle-index="${index}"]`) as HTMLElement
+  if (!targetElement || !furiganaColumn.value) {
+    return
+  }
+
+  // 计算滚动位置，使目标元素居中
+  const containerHeight = furiganaColumn.value.clientHeight
+  const elementTop = targetElement.offsetTop
+  const elementHeight = targetElement.clientHeight
+  const scrollTop = elementTop - (containerHeight / 2) + (elementHeight / 2)
+
+  // 滚动假名列（会自动同步到其他列）
+  furiganaColumn.value.scrollTop = scrollTop
+
+  // 清空输入
+  jumpToIndex.value = ''
+}
+
 // 组件挂载时从 sessionStorage 加载数据
 onMounted(() => {
   loadFromStorage()
@@ -292,17 +310,38 @@ onMounted(() => {
     <!-- 字幕展示区 -->
     <div v-else class="space-y-2">
       <!-- 控制栏 -->
-      <div class="flex items-center justify-between px-3 py-2 bg-white dark:bg-gray-950 rounded-lg border border-gray-200 dark:border-gray-800">
-        <div class="flex items-center space-x-4">
-          <div>
+      <div class="flex items-center justify-between px-3 py-2 bg-white dark:bg-gray-950 rounded-lg border border-gray-200 dark:border-gray-800 gap-4 flex-wrap">
+        <div class="flex items-center space-x-4 flex-1">
+          <div class="flex items-center space-x-2">
             <span class="text-sm font-bold text-gray-900 dark:text-white">
               {{ subtitleData?.totalEntries || 0 }} 条字幕
             </span>
-            <span class="text-xs text-gray-500 dark:text-gray-400 ml-2">
-              {{ subtitleData?.exportedAt ? new Date(subtitleData.exportedAt).toLocaleString('zh-CN') : '' }}
+            <span v-if="fileName" class="text-xs text-gray-500 dark:text-gray-400 px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded">
+              {{ fileName }}
             </span>
           </div>
 
+          <!-- 字幕跳转 -->
+          <div class="flex items-center space-x-2">
+            <input
+              v-model="jumpToIndex"
+              type="number"
+              placeholder="跳转到..."
+              @keyup.enter="handleJumpToSubtitle"
+              class="w-24 px-2 py-1 text-xs border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500"
+            />
+            <button
+              @click="handleJumpToSubtitle"
+              class="px-3 py-1 text-xs font-medium text-white bg-primary-600 hover:bg-primary-700 dark:bg-primary-dark-500 dark:hover:bg-primary-dark-600 rounded transition-colors"
+            >
+              跳转
+            </button>
+          </div>
+          
+        </div>
+
+        <div class="flex items-center space-x-2">
+          
           <!-- 遮盖功能按钮 -->
           <div class="hidden desktop:flex items-center space-x-2">
             <button
@@ -328,14 +367,14 @@ onMounted(() => {
               {{ hideTranslation ? '显示翻译' : '隐藏翻译' }}
             </button>
           </div>
-        </div>
 
-        <button
-          @click="clearSubtitles"
-          class="px-3 py-1 text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
-        >
-          清除字幕
-        </button>
+          <button
+            @click="clearSubtitles"
+            class="px-3 py-1 text-xs font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition-colors"
+          >
+            清除字幕
+          </button>
+        </div>
       </div>
 
       <!-- 桌面端：三栏布局 -->
