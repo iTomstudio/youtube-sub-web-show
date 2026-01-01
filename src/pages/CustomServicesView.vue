@@ -54,14 +54,14 @@ const services = ref<Service[]>([
 const contactMethods = ref<ContactMethod[]>([
   {
     type: 'wechat',
-    qrCode: '/qr-codes/wechat-qr.png',
+    qrCode: '/qr-codes/wechat-qr.jpg',
     label: '微信联系',
     hint: '扫码添加微信',
     accountId: ''
   },
   {
     type: 'qq',
-    qrCode: '/qr-codes/qq-qr.png',
+    qrCode: '/qr-codes/qq-qr.jpg',
     label: 'QQ联系',
     hint: '扫码添加QQ',
     accountId: ''

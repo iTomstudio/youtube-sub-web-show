@@ -14,7 +14,7 @@ const routes: RouteRecordRaw[] = [
     name: 'home',
     component: HomeView,
     meta: {
-      title: '橘子外语学习'
+      title: '字幕工具 - 橘子外语学习'
     }
   },
   {
@@ -22,7 +22,7 @@ const routes: RouteRecordRaw[] = [
     name: 'nikse',
     component: SubtitleEditorView,
     meta: {
-      title: '精听工具 - YouTube Sub Web Show',
+      title: '精听工具 - 橘子外语学习',
       fullScreen: true,
       keepAlive: true
     }
