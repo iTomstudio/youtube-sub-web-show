@@ -199,13 +199,60 @@ const examples = ref<VideoExample[]>([
         </li>
         <li class="flex items-start space-x-2">
           <span class="text-primary-600 dark:text-primary-dark-500 font-bold">•</span>
-          <span>资源完全免费，无需注册或付费</span>
+          <span>本页资源作为例子完全免费，无需注册或付费</span>
         </li>
         <li class="flex items-start space-x-2">
           <span class="text-primary-600 dark:text-primary-dark-500 font-bold">•</span>
-          <span>如需更多学习资源或定制服务，请访问「定制服务」页面</span>
+          <span>如需更多学习资源，请关注微信公众号：橘子外语学习</span>
+        </li>
+        <li class="flex items-start space-x-2">
+          <span class="text-primary-600 dark:text-primary-dark-500 font-bold">•</span>
+          <span>定制服务，请访问「定制服务」页面</span>
         </li>
       </ul>
+    </section>
+
+    <!-- 文件介绍 -->
+    <section class="bg-blue-50 dark:bg-gray-900 border border-blue-200 dark:border-gray-800 rounded-lg p-6">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+        <span class="text-2xl">💡</span>
+        <span>文件介绍</span>
+      </h2>
+      <ul class="space-y-3 text-gray-600 dark:text-gray-400">
+        <li class="flex items-start space-x-3">
+          <span class="text-blue-600 dark:text-blue-400 font-bold text-lg">•</span>
+          <div>
+            <span class="font-semibold text-gray-900 dark:text-white">学习日语：</span>
+            <span class="ml-1">使用 <code class="px-2 py-0.5 bg-gray-200 dark:bg-gray-800 rounded text-sm">_jp_cn.srt</code>（双语）或 <code class="px-2 py-0.5 bg-gray-200 dark:bg-gray-800 rounded text-sm">_txt.txt</code>（纯文本对照）</span>
+          </div>
+        </li>
+        <li class="flex items-start space-x-3">
+          <span class="text-blue-600 dark:text-blue-400 font-bold text-lg">•</span>
+          <div>
+            <span class="font-semibold text-gray-900 dark:text-white">视频字幕：</span>
+            <span class="ml-1">使用 <code class="px-2 py-0.5 bg-gray-200 dark:bg-gray-800 rounded text-sm">_jp.srt</code> 或 <code class="px-2 py-0.5 bg-gray-200 dark:bg-gray-800 rounded text-sm">_cn.srt</code>，日语字幕 和 中文字幕</span>
+          </div>
+        </li>
+        <li class="flex items-start space-x-3">
+          <span class="text-blue-600 dark:text-blue-400 font-bold text-lg">•</span>
+          <div>
+            <span class="font-semibold text-gray-900 dark:text-white">页面导入：</span>
+            <span class="ml-1">使用 <code class="px-2 py-0.5 bg-gray-200 dark:bg-gray-800 rounded text-sm">_complete.json</code> 导入到【<a href="https://juzi.zeabur.app/" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 hover:underline">橘子外语学习网站</a>】中</span>
+          </div>
+        </li>
+        <li class="flex items-start space-x-3">
+          <span class="text-blue-600 dark:text-blue-400 font-bold text-lg">•</span>
+          <div>
+            <span class="font-semibold text-gray-900 dark:text-white">快速预览：</span>
+            <span class="ml-1">使用 <code class="px-2 py-0.5 bg-gray-200 dark:bg-gray-800 rounded text-sm">.txt</code> 查看视频基本信息</span>
+          </div>
+        </li>
+      </ul>
+      <div class="mt-4 pt-4 border-t border-blue-200 dark:border-gray-700">
+        <p class="text-sm text-gray-600 dark:text-gray-400">
+          如果有问题，请联系 QQ：1443183233
+        </p>
+      </div>
     </section>
   </div>
 </template>
