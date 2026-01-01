@@ -1,5 +1,8 @@
 <script setup lang="ts">
-// 关于页面组件
+import { useScrollPosition } from '@/composables/useScrollPosition'
+
+// 保存和恢复滚动位置
+useScrollPosition()
 </script>
 
 <template>

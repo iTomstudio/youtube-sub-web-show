@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onActivated } from 'vue'
 import type { Subtitle, SubtitleData } from '@/types/subtitle'
 import SubtitleItem from '@/components/SubtitleItem.vue'
 import { Upload } from 'lucide-vue-next'
 import { useAnalytics } from '@/composables/useAnalytics'
+import { useScrollPosition, useElementScrollPosition } from '@/composables/useScrollPosition'
 
 const {
   trackSubtitleUpload,
@@ -23,6 +24,38 @@ const fileName = ref<string>('')
 const furiganaColumn = ref<HTMLElement | null>(null)
 const textColumn = ref<HTMLElement | null>(null)
 const translatedColumn = ref<HTMLElement | null>(null)
+
+// 保存和恢复窗口滚动位置（用于上传区域的滚动）
+useScrollPosition()
+
+// 保存和恢复滚动容器的位置（三个列是同步滚动的，只需保存一个）
+// 但恢复时需要同步到所有三个列
+useElementScrollPosition(furiganaColumn)
+
+// 在组件激活时，手动恢复所有三个列的滚动位置
+onActivated(() => {
+  console.log('HomeView 被激活，准备恢复滚动位置')
+  // 延迟一下确保 DOM 已渲染
+  setTimeout(() => {
+    if (furiganaColumn.value && textColumn.value && translatedColumn.value) {
+      const scrollTop = furiganaColumn.value.scrollTop
+      console.log('恢复字幕列滚动位置:', scrollTop)
+      textColumn.value.scrollTop = scrollTop
+      translatedColumn.value.scrollTop = scrollTop
+    } else {
+      console.warn('字幕列元素不存在:', {
+        furigana: !!furiganaColumn.value,
+        text: !!textColumn.value,
+        translated: !!translatedColumn.value
+      })
+    }
+  }, 50)
+})
+
+// 组件挂载时的调试
+onMounted(() => {
+  console.log('HomeView 已挂载')
+})
 
 let isScrolling = false
 let scrollTimer: number | null = null

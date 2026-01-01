@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { TrendingUp, TrendingDown, Users, Eye } from 'lucide-vue-next'
+import { useScrollPosition } from '@/composables/useScrollPosition'
+
+// 保存和恢复滚动位置
+useScrollPosition()
 
 interface DashboardMetric {
   label: string

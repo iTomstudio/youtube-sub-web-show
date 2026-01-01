@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { h, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import Navigation from '@/components/layout/Navigation.vue'
 import MainLayout from '@/components/layout/MainLayout.vue'
@@ -25,9 +25,13 @@ watch(() => route.path, (newPath) => {
 
     <!-- 其他页面 - 正常路由渲染 -->
     <div v-show="!isEditorActive">
-      <router-view v-slot="{ Component }">
-        <component :is="h(MainLayout, null, { default: () => h(Component) })" />
-      </router-view>
+      <MainLayout>
+        <router-view v-slot="{ Component }">
+          <keep-alive>
+            <component :is="Component" />
+          </keep-alive>
+        </router-view>
+      </MainLayout>
     </div>
   </div>
 </template>

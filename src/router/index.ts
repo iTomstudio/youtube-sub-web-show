@@ -73,11 +73,13 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
   scrollBehavior(_to, _from, savedPosition) {
+    // 如果是浏览器前进/后退，使用保存的位置
     if (savedPosition) {
       return savedPosition
-    } else {
-      return { top: 0 }
     }
+    // 对于使用 keep-alive 缓存的页面，返回 false 保持当前滚动位置
+    // 这样页面会保持用户离开时的滚动位置
+    return false
   }
 })
 
