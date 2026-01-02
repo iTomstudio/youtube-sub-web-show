@@ -40,13 +40,13 @@ class AnalyticsService implements IAnalytics {
       window.dataLayer = window.dataLayer || []
 
       // 定义 gtag 函数（标准方式）
-      function gtag(...args: any[]) {
+      const gtag = function() {
         window.dataLayer?.push(arguments)
       }
       window.gtag = gtag as any
 
       // 初始化 GA4（记录时间戳）
-      window.gtag('js', new Date())
+      ;(window.gtag as any)('js', new Date())
 
       // 加载 GA4 脚本标签
       const script = document.createElement('script')
