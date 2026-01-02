@@ -26,6 +26,9 @@ class AnalyticsService implements IAnalytics {
     if (config.debugMode) {
       console.log('[Analytics] Initialized with ID:', config.measurementId)
     }
+
+    // 初始化完成后，追踪当前页面
+    this.trackPageView(window.location.pathname, document.title)
   }
 
   /**
@@ -33,22 +36,28 @@ class AnalyticsService implements IAnalytics {
    */
   private loadGAScript(): Promise<void> {
     return new Promise((resolve) => {
-      // 初始化 dataLayer
+      // 初始化 dataLayer（必须在脚本加载前）
       window.dataLayer = window.dataLayer || []
 
-      // 定义 gtag 函数
-      window.gtag = function (...args: any[]) {
-        window.dataLayer?.push(args)
+      // 定义 gtag 函数（标准方式）
+      function gtag(...args: any[]) {
+        window.dataLayer?.push(arguments)
       }
+      window.gtag = gtag as any
 
-      // 初始化 GA4
+      // 初始化 GA4（记录时间戳）
       window.gtag('js', new Date())
 
       // 加载 GA4 脚本标签
       const script = document.createElement('script')
       script.async = true
       script.src = `https://www.googletagmanager.com/gtag/js?id=${this.config?.measurementId}`
-      script.onload = () => resolve()
+      script.onload = () => {
+        if (this.config?.debugMode) {
+          console.log('[Analytics] GA4 script loaded successfully')
+        }
+        resolve()
+      }
       script.onerror = () => {
         console.error('[Analytics] Failed to load GA4 script')
         resolve()
@@ -155,3 +164,8 @@ class AnalyticsService implements IAnalytics {
 
 // 导出单例
 export const analyticsService = new AnalyticsService()
+
+// 在开发环境中，将 analyticsService 暴露到 window 对象，方便调试
+if (import.meta.env.DEV) {
+  ;(window as any).analyticsService = analyticsService
+}

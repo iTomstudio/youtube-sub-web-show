@@ -88,10 +88,13 @@ router.beforeEach((to, _from, next) => {
   const title = (to.meta.title as string) || 'YouTube Sub Web Show'
   document.title = title
 
-  // 追踪页面浏览
-  if (analyticsService.isReady()) {
-    analyticsService.trackPageView(to.path, title)
-  }
+  // 追踪页面浏览 - 使用 nextTick 确保在下一个事件循环中执行
+  // 这样可以给 Analytics 更多时间完成初始化
+  setTimeout(() => {
+    if (analyticsService.isReady()) {
+      analyticsService.trackPageView(to.path, title)
+    }
+  }, 100)
 
   next()
 })

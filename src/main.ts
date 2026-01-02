@@ -14,6 +14,11 @@ const app = createApp(App)
 const measurementId = import.meta.env.VITE_GA4_MEASUREMENT_ID as string
 const debugMode = import.meta.env.DEV
 
+// 先挂载应用，确保 DOM 已准备好
+app.use(router)
+app.mount('#app')
+
+// 然后初始化 Analytics（异步，不阻塞应用启动）
 if (measurementId) {
   analyticsService.initialize({
     measurementId,
@@ -24,6 +29,3 @@ if (measurementId) {
     console.error('Failed to initialize GA4:', error)
   })
 }
-
-app.use(router)
-app.mount('#app')
